@@ -88,15 +88,20 @@ def removeEmojis(text):
     return text.encode('ascii', 'ignore').decode('ascii')
 
 def removeEllipsis(text):
-    return re.sub('\.\.[\.]*', " ", text)
+    return re.sub(r'\.\.[\.]*', " ", text)
 
 def removeParens(text):
-    return re.sub("[\(\[].*?[\)\]]", "", text)
+    return re.sub(r"[\(\[].*?[\)\]]", "", text)
 
 def removeLF(text):
     text = re.sub('\n',' ', text)
     text = re.sub(' [ ]*', ' ', text)
     return text
+
+def removeSpecialCharacters(text):
+    text = re.sub('[#@?¿.,;:!¡&"`]',' ', text)
+    return text
+    
 
 def df_to_clean_text(df):
     text = ''
@@ -107,6 +112,7 @@ def df_to_clean_text(df):
     text = removeEmojis(text)
     text = removeParens(text)
     text = removeLF(text)
+    text = removeSpecialCharacters(text)
     text = text.lower()
     print('Text lenght: ',len(text))
     return text
