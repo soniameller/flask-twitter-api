@@ -7,12 +7,31 @@ from flask import request, jsonify
 import scraping 
 import sentimentAnalysis 
 import textAnalysis
-# import predict
+import predict
 
 
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+
+@app.route('/api/predict/', methods=['GET'])
+def prediction():
+    if 'start' in request.args:
+        start = str(request.args['start'])
+        length = 280
+
+        if 'length' in request.args:
+            if int(request.args['length']) > 280:
+                pass
+            else:
+                length = int(request.args['length'])
+        
+    else:
+        return jsonify({"Error": "No start text provided."})
+    newTweet = predict.getTweet(start,length)
+    print("NEW TWEET",newTweet)
+    return jsonify({"tweet":newTweet})    
+        
 
 
 @app.route('/api/tweets/', methods=['GET'])
@@ -34,7 +53,7 @@ def tweets():
 
         df = scraping.tweets_to_df(searchQuery,maxTweets,language=lang,geocode=[])
         df = scraping.get_full_text(df) 
-        top = scraping.get_top_tweets(df,5)
+        top = scraping.get_top_tweets(df,3)
         text= scraping.df_to_clean_text(df)
         sentiment = sentimentAnalysis.sentiment(text)
 
@@ -61,7 +80,7 @@ def tweets():
 # ---- PREDICTION ROUTER -----
 
 @app.route('/api/tweets/sentiment', methods=['POST'])
-def predict():
+def sentiment():
 
     tweet = list(request.form.to_dict().keys())[0]
     sentiment = sentimentAnalysis.sentiment(tweet)

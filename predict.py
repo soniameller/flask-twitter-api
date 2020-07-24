@@ -2,9 +2,17 @@ from keras.models import load_model
 import time
 import numpy as np
 import heapq
+import pickle
 
 model = load_model('models/todes_model.h5')
-text = open(file_name+'.txt', encoding="utf8").read()
+
+def load_obj(name ):
+    with open('obj/' + name + '.pkl', 'rb') as f:
+        return pickle.load(f)
+
+chars = load_obj('chars')
+indices_char = load_obj('indices_char')
+char_indices = load_obj('char_indices')
 
 SEQUENCE_LENGTH = 80
 MAX_TWITTER_CHARS = 280
@@ -69,6 +77,6 @@ def genSentence(text, words = 2):
 def getTweet(text, tweet_length):
     test_txt = genSentence(text, 1)
 
-    while len(test_txt)<=MAX_TWITTER_CHARS:
+    while len(test_txt)<=tweet_length:
         test_txt = genSentence(test_txt, 1)
     return test_txt
