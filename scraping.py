@@ -69,15 +69,23 @@ def get_full_text(df):
   df.drop('condition', inplace=True,axis=1)
   return df
 
-def get_top_tweets(df,top_nb):
-    sorted_tweets = df.sort_values(by='retweet_count', ascending=False).full_text
-
+def get_top_tweets(df,top_nb):    
+    sorted_tweets = df.sort_values(by='retweet_count', ascending=False)
     top = []
 
-    for tweet in sorted_tweets:
-        while len(top) < top_nb  and tweet not in top:
-            top.append(tweet)
-    return top
+
+    for i in range(len(sorted_tweets)):
+        if len(top) < top_nb:
+            text = [x.full_text for x in top]
+            if sorted_tweets.iloc[i].full_text not in text:
+                top.append(sorted_tweets.iloc[i])
+        else:
+            break
+    return [{"text": x.full_text, 
+      "name": x.retweeted_status['user']['name'],
+      "screen_name":x.retweeted_status['user']['screen_name'],
+      "favorite_count":str(x.retweeted_status['favorite_count']),
+      "retweeted_count":str(x.retweet_count)} for x in top]
 
 
 # ----------- TEXT CLEANING FUNCTIONS ---------

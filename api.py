@@ -72,7 +72,7 @@ def tweets():
       # TODO -don't know if this works
         return jsonify({"Error: No query field provided. Please specify a query."})
 
-
+    print(top)
     # Use the jsonify function from Flask to convert our list of
     # Python dictionaries to the JSON format.
     return jsonify({'top_tweets':top, 'sentiment': sentiment,'word_freq':wordFreq})
