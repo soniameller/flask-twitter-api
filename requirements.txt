@@ -49,7 +49,7 @@ nbdime==1.1.0
 nbformat==5.0.4
 nltk==3.5
 notebook==6.0.1
-numpy==1.18.1
+numpy==1.22.0
 oauthlib==3.1.0
 opt-einsum==3.2.1
 pandas==1.0.1
